@@ -1,0 +1,57 @@
+.errorPannel {
+    border: 2px solid #f90606;
+    border-radius: 5px;
+    padding: 10px;
+    background: #efcaca;
+}
+.errorPannel p {
+    color: #9f0e0e;
+}
+.changesMadeToPCEmpty_Style{
+    color:rgb(234,0,30);
+    font-size: 12px;
+}
+.tableFixHead          { overflow: auto; height: 200px; }
+.tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
+
+.img1{
+   width:350px;
+   height:320px;
+}
+.img2{
+  width:350px;
+   height:320px;
+}
+.imgView{
+    width:100%;
+    height:100%;
+}
+
+.slds-modal__container{
+    width: 90% !important;
+    max-width: 90% !important;     
+}
+
+
+.border{
+    border:1px solid gray;
+    padding:0.5%;
+}
+
+input:required:valid {
+ border:1px solid green;
+}
+input:invalid {  
+  border:2px solid red;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

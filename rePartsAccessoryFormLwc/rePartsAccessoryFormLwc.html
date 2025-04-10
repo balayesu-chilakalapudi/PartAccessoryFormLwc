@@ -1,0 +1,314 @@
+<template>
+    <div style="border:1px solid gray;">
+        <div style="border-bottom:1px solid gray;padding:0.1%;text-align:center;background:aliceblue;">
+            <h2 style="font-family:fantasy">Customer Service: Parts &amp; Accessories Form</h2>
+        </div>
+        <br /><br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <div class="slds-col slds-size_12-of-12 slds-align_absolute-center slds-m-bottom_large"
+                    data-id="ps_errorPanel"></div>
+                <h2 style="font-family:tahoma">Dealership Information</h2>
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_4-of-6">
+                <div if:false={showPannelErrorMessage}
+                    class="slds-col slds-size_12-of-12 slds-align_absolute-center slds-m-bottom_large">
+                    <p style="">
+                        {enrollmentStep1ParaBefore} <a class="slds-text-heading_small" style="font-weight:bold;"
+                            href={employeeProfileUrl} target="_blank"><u>employee profile</u></a>&nbsp;
+                        {enrollmentStep1ParaAfter}
+                    </p>
+                </div>
+                <div if:true={showPannelErrorMessage}
+                    class="slds-col slds-size_12-of-12 slds-m-bottom_large errorPannel">
+                    <p style="">
+                        Please update your <a class="slds-text-heading_small" style="color:#9f0e0e; font-weight:bold;"
+                            href={employeeProfileUrl} target="_blank"><u>employee profile</u></a>&nbsp; with your
+                        {pannelErrorMessage}.
+                    </p>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="1.Name" variant="label-stacked" value={accessoryObj.name} required="true"
+                    disabled="true"> </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="2.Work Phone" variant="label-stacked" value={accessoryObj.workPhone}
+                    disabled="true" required="true"> </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="3.Work Email" variant="label-stacked" value={accessoryObj.workEmail}
+                    disabled="true" required="true"> </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="4. Dealership Code" variant="label-stacked" value={accessoryObj.dealershipCode}
+                    disabled="true" required="true"> </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="5.Dealership Name" variant="label-stacked" value={accessoryObj.dealershipName}
+                    disabled="true" required="true">
+                </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input label="6.Job Role" variant="label-stacked" value={accessoryObj.jobRole} disabled="true"
+                    required="true">
+                </lightning-input>
+                <!--
+                Preferred Contact Method<br />
+                <lightning-radio-group name="radioGroup" label="Preferred Contact Method" variant="label-hidden"
+                    options={options} value={value} type="radio" disabled="true"
+                    style="font-weight:normal"></lightning-radio-group>
+            -->
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <h2 style="font-family:tahoma">Customer Information</h2>
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input data-name="firstName" label="First Name" variant="label-stacked"
+                    value={accessoryObj.firstName} required="true" onchange={readFirstName}> </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input data-name="lastName" label="Last Name" variant="label-stacked"
+                    value={accessoryObj.lastName} required="true" onchange={readLastName}> </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-input data-name="vin" label="VIN" variant="label-stacked" value={accessoryObj.vin}
+                    onchange={readVIN} required="true"> </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-6">
+                <lightning-combobox data-name="promotion" name="Promotion" label="Promotion"
+                    value={accessoryObj.promotion} placeholder="Select Promotion" options={promotionPicklistValues}
+                    onchange={handlePromotionChange} variant="label-stacked"></lightning-combobox>
+                <!--
+                <lightning-input label="Promotion" variant="label-stacked"
+                    value={accessoryObj.promotion} disabled="true" required="true"> </lightning-input>
+                    -->
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+            <div class="slds-col slds-size_4-of-6">
+                <lightning-textarea name="commentsTxt" label="Comments" placeholder="type here..." onchange={readComments}></lightning-textarea>
+            </div>
+            <div class="slds-col slds-size_1-of-6">
+                &nbsp;
+            </div>
+        </div>
+        <br />
+        <center>
+            <lightning-button variant="brand" label="Add Part/Accessory Information"
+                title="Add Part/Accessory Information" onclick={addPartsAccessorryBtnClick} class="slds-m-left_x-small"
+                disabled={disableSubmitBtn}>
+            </lightning-button>
+        </center>
+        <br />
+        <div style="margin:1%;padding:1%">
+            <template for:each={partAccessoryObjList} for:item="pObjItem" for:index="index">
+                <div class="slds-grid slds-gutters" key={pObjItem.id}>
+                    <div class="slds-col slds-size_1-of-4">
+                        <lightning-combobox data-index={index} name="PartNumber" label="Part Number"
+                            placeholder="Select Part Number" options={part_number_options} disabled={disableSubmitBtn}
+                            onchange={handlePartNumberChange} variant="label-stacked"></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <lightning-input data-name="description" label="Description" variant="label-stacked"
+                            value={pObjItem.Part_Description__c} disabled="true"> </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <lightning-input data-name="msrp" label="MSRP" variant="label-stacked" value={pObjItem.Part_MSRP__c}
+                            disabled="true"> </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <lightning-input data-name="Customer Discount" label="Customer Discount" variant="label-stacked"
+                            value={pObjItem.Part_Customer_Discount__c} disabled="true"> </lightning-input>
+                    </div>
+                </div>
+            </template>
+
+            <br />
+            <template if:true={partAccessoryObjListNotEmpty}>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-4">
+                        <lightning-button variant="brand" label="+Add New" title="+Add New"
+                            onclick={addPartsAccessorryBtnClick} disabled={disableSubmitBtn} class="slds-m-left_x-small">
+                        </lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        &nbsp;
+                    </div>
+                    <div class="slds-col slds-size_2-of-4">
+                        <lightning-input name="total" variant="label-inline" label="Total Customer Discount"
+                            placeholder="$0" value={totalCustomerDiscount} disabled="true"></lightning-input>
+                    </div>
+
+                </div>
+                <br />
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-4">
+                        &nbsp;
+                    </div>
+                    <div class="slds-col slds-size_2-of-4">
+                        <center>
+                            <lightning-button variant="brand" label="Submit" title="Submit" onclick={submitDataBtnClick} disabled={disableSubmitBtn}
+                                class="slds-m-left_x-small">
+                            </lightning-button>
+                        </center>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        &nbsp;
+                    </div>
+
+                </div>
+            </template>
+        </div>
+        <br />
+        <br />
+        <template if:true={openFormModalOpenBln}>
+            <!-- Modal/Popup Box LWC starts here -->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeOpenFormModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Part/Accessory
+                            Information</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                        <template for:each={partAccessoryObjList} for:item="pObjItem" for:index="index">
+                            <div class="slds-grid slds-gutters" key={pObjItem.id}>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-combobox data-index={index} name="PartNumber" label="Part Number"
+                                        value={pObjItem.part_number} placeholder="Select Part Number"
+                                        options={part_number_options} onchange={handlePartNumberChange}
+                                        variant="label-stacked"></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-input data-name="description" label="Description" variant="label-stacked"
+                                        value={pObjItem.description} disabled="true"> </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-input data-name="msrp" label="MSRP" variant="label-stacked"
+                                        value={pObjItem.msrp} disabled="true"> </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-input data-name="Customer Discount" label="Customer Discount"
+                                        variant="label-stacked" value={pObjItem.customerDiscount} disabled="true">
+                                    </lightning-input>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <lightning-button variant="brand" label="Cancel" title="Cancel" onclick={closeOpenFormModal}
+                            class="slds-m-left_x-small"></lightning-button>
+                        <lightning-button variant="brand" label="Save" title="Save" onclick={saveOpenFormModal}
+                            class="slds-m-left_x-small"></lightning-button>
+                        <!-- <lightning-button variant="brand" label="Edit" title="Edit" onclick={saveOpenFormModal} class="slds-m-left_x-small"></lightning-button> -->
+                        <template if:true={itemIndex}>
+                            <lightning-button variant="brand" label="Delete" title="Delete"
+                                onclick={deleteOpenFormModal} class="slds-m-left_x-small"></lightning-button>
+                        </template>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+              
+        </template>
+        <lightning-spinner if:true={isLoading}></lightning-spinner>
+    </div>
+    <br /><br /><br />
+</template>
