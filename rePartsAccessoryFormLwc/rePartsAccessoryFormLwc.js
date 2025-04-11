@@ -356,6 +356,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
 
     readComments(event) {
         this.accessoryObj.comments = event.target.value;
+        console.log('comments:' + this.accessoryObj.comments);
     }
 
     handleInputValidation() {
@@ -435,6 +436,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             }
 
             console.log('promotion:' + promotion);
+
             if (!emptyArray.includes(promotion)) {
                 if (emptyArray.includes(this.accessoryObj.promotion)) {
                     invalidData = true;
@@ -488,7 +490,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             this.itemIndex = event.currentTarget.dataset.index;
             let partObj = JSON.parse(event.target.value);
             console.log('partObj:' + JSON.stringify(partObj));
-            console.log('partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList));
+            console.log('partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList)); 
             console.log('itemIndex:' + this.itemIndex);
             console.log('this.accessoryObj.promotion:' + this.accessoryObj.promotion);
             console.log(this.partAccessoryObjList[this.itemIndex]);
@@ -496,6 +498,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             this.partAccessoryObjList[this.itemIndex].Part_Description__c = partObj.Description__c;
             this.partAccessoryObjList[this.itemIndex].Part_MSRP__c = partObj.MSRP__c;
             this.partAccessoryObjList[this.itemIndex].Part_Customer_Discount__c = parseFloat(partObj.MSRP__c) * parseFloat(this.accessoryObj.promotion) / 100;
+            this.validatePartAccessoryObjList();
         } catch (err) {
             console.log('Error:' + err.stack + '\n' + err.message + '\n' + err.lineNumber + '\n' + err);
         }
@@ -520,7 +523,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
     @track disableSubmitBtn = false;
     @track isLoading = false;
     submitDataBtnClick() {
-        if (this.isPersonValid()) {
+        if (this.isPersonValid() && !this.validatePartAccessoryObjList()) {
             console.log('accessoryObj:' + JSON.stringify(this.accessoryObj));
             this.isLoading = true;
             this.workflowItemObj.Customer_First_Name__c = this.accessoryObj.firstName;
@@ -578,7 +581,40 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
                 this.isLoading = false;
                 // this.closeOpenFormModal();
             })
+        } else {
+            /*  const evt = new ShowToastEvent({
+                      title: 'ERROR',
+                      message: 'Please check your inputs and submit again',
+                      variant: 'error',
+                      mode: 'dismissable'
+                  });
+                  this.dispatchEvent(evt);*/
         }
     }
+
+
+    validatePartAccessoryObjList() {
+        let invalidData = false;
+        try {
+            const emptyArray = ['', undefined, null, ' ', ';'];
+            const comboboxes = this.template.querySelectorAll('lightning-combobox[data-index]');
+
+            comboboxes.forEach((comboBox, index) => {
+                const part = this.partAccessoryObjList[index];
+                if (!emptyArray.includes(part?.Part_Number__c)) {
+                    comboBox.setCustomValidity('');
+                } else {
+                    comboBox.setCustomValidity('Please select the Part Number');
+                    invalidData = true;
+                }
+                comboBox.reportValidity();
+            });
+
+        } catch (err) {
+            console.log(err.stack);
+        }
+        return invalidData;
+    }
+
 
 }

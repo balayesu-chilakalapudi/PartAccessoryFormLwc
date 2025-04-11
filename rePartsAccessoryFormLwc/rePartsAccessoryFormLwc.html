@@ -133,12 +133,12 @@
             </div>
             <div class="slds-col slds-size_2-of-6">
                 <lightning-input data-name="firstName" label="First Name" variant="label-stacked"
-                    value={accessoryObj.firstName} required="true" onchange={readFirstName}> </lightning-input>
+                    value={accessoryObj.firstName} required="true" onchange={readFirstName} disabled={disableSubmitBtn}> </lightning-input>
             </div>
 
             <div class="slds-col slds-size_2-of-6">
                 <lightning-input data-name="lastName" label="Last Name" variant="label-stacked"
-                    value={accessoryObj.lastName} required="true" onchange={readLastName}> </lightning-input>
+                    value={accessoryObj.lastName} required="true" onchange={readLastName} disabled={disableSubmitBtn}> </lightning-input>
             </div>
             <div class="slds-col slds-size_1-of-6">
                 &nbsp;
@@ -151,13 +151,13 @@
             </div>
             <div class="slds-col slds-size_2-of-6">
                 <lightning-input data-name="vin" label="VIN" variant="label-stacked" value={accessoryObj.vin}
-                    onchange={readVIN} required="true"> </lightning-input>
+                    onchange={readVIN} required="true" disabled={disableSubmitBtn}> </lightning-input>
             </div>
 
             <div class="slds-col slds-size_2-of-6">
                 <lightning-combobox data-name="promotion" name="Promotion" label="Promotion"
                     value={accessoryObj.promotion} placeholder="Select Promotion" options={promotionPicklistValues}
-                    onchange={handlePromotionChange} variant="label-stacked"></lightning-combobox>
+                    onchange={handlePromotionChange} variant="label-stacked" disabled={disableSubmitBtn}></lightning-combobox>
                 <!--
                 <lightning-input label="Promotion" variant="label-stacked"
                     value={accessoryObj.promotion} disabled="true" required="true"> </lightning-input>
@@ -173,7 +173,7 @@
                 &nbsp;
             </div>
             <div class="slds-col slds-size_4-of-6">
-                <lightning-textarea name="commentsTxt" label="Comments" placeholder="type here..." onchange={readComments}></lightning-textarea>
+                <lightning-textarea name="commentsTxt" label="Comments" placeholder="type here..." onchange={readComments} disabled={disableSubmitBtn}></lightning-textarea>
             </div>
             <div class="slds-col slds-size_1-of-6">
                 &nbsp;
