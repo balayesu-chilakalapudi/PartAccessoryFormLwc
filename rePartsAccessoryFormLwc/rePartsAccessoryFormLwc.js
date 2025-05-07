@@ -84,6 +84,8 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
         return this.partAccessoryObjList.length > 0;
     }
 
+   
+
     /*get promotion_options() {
         return [
             { label: '10% Offer (Parts Only)', value: '10' },
@@ -161,7 +163,8 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             this.accessoryObj.jobRole = data.jobRole;
             this.accessoryObj.personRoleId = data.personRoleId;
             for (let x of data.partAccessoryInfoList) {
-                this.part_number_options.push({ label: x.Part_Number__c, value: JSON.stringify(x) });
+               // this.part_number_options.push({ label: x.Part_Number__c, value: JSON.stringify(x) });
+                 this.part_number_options.push({ label: x.ProductCode, value: JSON.stringify(x) });
             }
 
             /* this.accessoryObj.streetAddress=data.streetAddress;
@@ -193,14 +196,16 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
     }
 
     @track openFormModalOpenBln = false;
+    @track idVal = 0;
     addPartsAccessorryBtnClick() {
         if (this.isPersonValid() && !this.handleInputValidation()) {
             // this.openFormBtnClick();
             this.partAccessoryObjList.push({
+                id: this.idVal++,
                 Part_Number__c: '',
                 Part_Description__c: '',
-                Part_MSRP__c: '',
-                Part_Customer_Discount__c: '',
+                Part_MSRP__c: 0,
+                Part_Customer_Discount__c: 0,
                 sObjectType: 'Workflow_Item_Detail__c'
             });
         }
@@ -375,7 +380,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             lastName = this.template.querySelector('lightning-input[data-name="lastName"]');
             vin = this.template.querySelector('lightning-input[data-name="vin"]');
 
-            if (!emptyArray.includes(vin)) {
+          /*  if (!emptyArray.includes(vin)) {
                 let expression = new RegExp("^[a-zA-Z0-9 ]+$");
                 if (!expression.test(this.accessoryObj.vin)) {
                     invalidData = true;
@@ -400,13 +405,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
                                 vin.setCustomValidity(response.strResponse);
                                 vin.reportValidity();
                             } else {
-                                this.isLoading = false;
-                                /* const evt = new ShowToastEvent({
-                                  title: 'Success',
-                                    message: 'VIN:' + response.strResponse,
-                                    variant: 'success',
-                                });
-                                this.dispatchEvent(evt);*/
+                                this.isLoading = false;                               
                                 vin.setCustomValidity('');
                                 vin.reportValidity();
                             }
@@ -433,7 +432,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
                     }
                 }
                 vin.reportValidity();
-            }
+            }*/
 
             console.log('promotion:' + promotion);
 
@@ -479,38 +478,57 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
         this.accessoryObj.promotion = event.detail.value;
         console.log('this.accessoryObj.promotion:' + this.accessoryObj.promotion);
         if (!this.handleInputValidation()) {
-            this.partAccessoryObjList.forEach(x => { x.Part_Customer_Discount__c = (parseFloat(x.Part_MSRP__c) * parseFloat(this.accessoryObj.promotion) / 100); });
+            this.partAccessoryObjList.forEach(x => { x.Part_Customer_Discount__c = parseFloat(parseFloat(x.Part_MSRP__c) * parseFloat(this.accessoryObj.promotion) / 100).toFixed(2); });
             console.log('this.partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList));
         }
+        this.totalCustomerDiscountVal();
     }
+
+ /* lookupUpdate(event){
+      if(event.detail.objectName =='PriceBookEntry'){
+        this.partObj=event.detail.selectedRecord;
+        console.log('partObj:'+JSON.string(this.partObj));
+        this.handlePartNumberChange();
+       // typeof event.detail.selectedRecord == 'undefined' ? this.enrollmentDetail.programContact = '' : this.enrollmentDetail.programContact = event.detail.selectedRecord.hasOwnProperty('Id') ? event.detail.selectedRecord.Id : '';
+        //typeof event.detail.selectedRecord == 'undefined' ? this.enrollmentDetail.programEmail = '' : this.enrollmentDetail.programEmail = event.detail.selectedRecord.hasOwnProperty('Email') ? event.detail.selectedRecord.Email : '';
+      } 
+    }*/
 
     @track itemIndex;
     handlePartNumberChange(event) {
         try {
+            
             this.itemIndex = event.currentTarget.dataset.index;
-            let partObj = JSON.parse(event.target.value);
+            let partObj = event.detail.selectedRecord;
+            // JSON.parse(event.target.value);
             console.log('partObj:' + JSON.stringify(partObj));
-            console.log('partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList)); 
+           
             console.log('itemIndex:' + this.itemIndex);
             console.log('this.accessoryObj.promotion:' + this.accessoryObj.promotion);
             console.log(this.partAccessoryObjList[this.itemIndex]);
-            this.partAccessoryObjList[this.itemIndex].Part_Number__c = partObj.Part_Number__c;
-            this.partAccessoryObjList[this.itemIndex].Part_Description__c = partObj.Description__c;
-            this.partAccessoryObjList[this.itemIndex].Part_MSRP__c = partObj.MSRP__c;
-            this.partAccessoryObjList[this.itemIndex].Part_Customer_Discount__c = parseFloat(partObj.MSRP__c) * parseFloat(this.accessoryObj.promotion) / 100;
-            this.validatePartAccessoryObjList();
+            this.partAccessoryObjList[this.itemIndex].Part_Number__c = partObj.ProductCode;   //partObj.Part_Number__c;
+            this.partAccessoryObjList[this.itemIndex].Part_Description__c = partObj.Product2.Name; //partObj.Description__c;
+            this.partAccessoryObjList[this.itemIndex].Part_MSRP__c = partObj.UnitPrice; //partObj.MSRP__c;
+            this.partAccessoryObjList[this.itemIndex].Part_Customer_Discount__c = parseFloat(partObj.UnitPrice * parseFloat(this.accessoryObj.promotion) / 100).toFixed(2);
+            //parseFloat(parseFloat(partObj.MSRP__c) * parseFloat(this.accessoryObj.promotion) / 100).toFixed(2);
+            this.totalCustomerDiscountVal(); 
+            this.validatePartAccessoryObjList();    
+            console.log('partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList));      
         } catch (err) {
             console.log('Error:' + err.stack + '\n' + err.message + '\n' + err.lineNumber + '\n' + err);
         }
     }
-    get totalCustomerDiscount() {
+    @track totalCustomerDiscount=0;
+    totalCustomerDiscountVal() {
         let total = 0;
         for (let x of this.partAccessoryObjList) {
             if (x.Part_Customer_Discount__c != null && x.Part_Customer_Discount__c != undefined && x.Part_Customer_Discount__c != '') {
                 total += parseFloat(x.Part_Customer_Discount__c);
             }
-        }
-        return total;
+        }  
+        console.log('total:'+total);
+       this.totalCustomerDiscount=parseFloat(total).toFixed(2);    
+       console.log('totalCustomerDistocunt:' + this.totalCustomerDiscount);     
     }
 
     @track workflowItemId;
@@ -527,6 +545,7 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             console.log('accessoryObj:' + JSON.stringify(this.accessoryObj));
             this.isLoading = true;
             this.workflowItemObj.Customer_First_Name__c = this.accessoryObj.firstName;
+            this.workflowItemObj.Customer_Last_Name__c = this.accessoryObj.lastName;
             this.workflowItemObj.Phone__c = this.accessoryObj.workPhone;
             this.workflowItemObj.Email__c = this.accessoryObj.workEmail;
             this.workflowItemObj.Retailer_Code_old__c = this.accessoryObj.dealershipCode;
@@ -536,11 +555,18 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             this.workflowItemObj.RE_Promotion__c = this.accessoryObj.promotion;
             this.workflowItemObj.Retailer_Comments__c = this.accessoryObj.comments;
             this.workflowItemObj.Total_Customer_discount__c = this.totalCustomerDiscount;
+            this.workflowItemObj.VIN__c=this.accessoryObj.vin;
             this.workflowItemObj.Status__c = 'Submitted';
+            let tempPartAccesoryObjList=JSON.parse(JSON.stringify(this.partAccessoryObjList));
+            //remove id field from list
+            tempPartAccesoryObjList = tempPartAccesoryObjList.map(({ id, ...rest }) => {
+                return rest; // This omits 'id' completely
+            });
+            
             console.log('workflowItemObj:' + JSON.stringify(this.workflowItemObj));
-            console.log('partAccessoryObjList:' + JSON.stringify(this.partAccessoryObjList));
+            console.log('partAccessoryObjList:' + JSON.stringify(tempPartAccesoryObjList));
             submitWorkflowItem({
-                partAccessoryObjList: this.partAccessoryObjList,
+                partAccessoryObjList: tempPartAccesoryObjList,
                 workflowItem: this.workflowItemObj
             }).then(response => {
                 this.isLoading = false;
@@ -614,6 +640,21 @@ export default class RePartsAccessoryFormLwc extends NavigationMixin(LightningEl
             console.log(err.stack);
         }
         return invalidData;
+    }
+    deleteItem(event) {
+        try {
+            const idToDelete = Number(event.currentTarget.dataset.id);
+            console.log('idToDelete:', idToDelete);
+            console.log('this.partAccessoryObjList:', JSON.stringify(this.partAccessoryObjList));
+            this.partAccessoryObjList = this.partAccessoryObjList.filter(
+                item => {
+                    console.log('checking item.Id:', item.id);
+                    return item.id !== idToDelete;
+                }
+            );
+        } catch (err) {
+            console.error('Error in deleteItem:', err);
+        }
     }
 
 

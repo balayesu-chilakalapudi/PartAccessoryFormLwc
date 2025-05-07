@@ -133,12 +133,14 @@
             </div>
             <div class="slds-col slds-size_2-of-6">
                 <lightning-input data-name="firstName" label="First Name" variant="label-stacked"
-                    value={accessoryObj.firstName} required="true" onchange={readFirstName} disabled={disableSubmitBtn}> </lightning-input>
+                    value={accessoryObj.firstName} required="true" onchange={readFirstName} disabled={disableSubmitBtn}>
+                </lightning-input>
             </div>
 
             <div class="slds-col slds-size_2-of-6">
                 <lightning-input data-name="lastName" label="Last Name" variant="label-stacked"
-                    value={accessoryObj.lastName} required="true" onchange={readLastName} disabled={disableSubmitBtn}> </lightning-input>
+                    value={accessoryObj.lastName} required="true" onchange={readLastName} disabled={disableSubmitBtn}>
+                </lightning-input>
             </div>
             <div class="slds-col slds-size_1-of-6">
                 &nbsp;
@@ -157,7 +159,8 @@
             <div class="slds-col slds-size_2-of-6">
                 <lightning-combobox data-name="promotion" name="Promotion" label="Promotion"
                     value={accessoryObj.promotion} placeholder="Select Promotion" options={promotionPicklistValues}
-                    onchange={handlePromotionChange} variant="label-stacked" disabled={disableSubmitBtn}></lightning-combobox>
+                    onchange={handlePromotionChange} variant="label-stacked"
+                    disabled={disableSubmitBtn}></lightning-combobox>
                 <!--
                 <lightning-input label="Promotion" variant="label-stacked"
                     value={accessoryObj.promotion} disabled="true" required="true"> </lightning-input>
@@ -173,7 +176,8 @@
                 &nbsp;
             </div>
             <div class="slds-col slds-size_4-of-6">
-                <lightning-textarea name="commentsTxt" label="Comments" placeholder="type here..." onchange={readComments} disabled={disableSubmitBtn}></lightning-textarea>
+                <lightning-textarea name="commentsTxt" label="Comments" placeholder="type here..."
+                    onchange={readComments} disabled={disableSubmitBtn}></lightning-textarea>
             </div>
             <div class="slds-col slds-size_1-of-6">
                 &nbsp;
@@ -191,31 +195,55 @@
             <template for:each={partAccessoryObjList} for:item="pObjItem" for:index="index">
                 <div class="slds-grid slds-gutters" key={pObjItem.id}>
                     <div class="slds-col slds-size_1-of-4">
+                        <!--
                         <lightning-combobox data-index={index} name="PartNumber" label="Part Number"
                             placeholder="Select Part Number" options={part_number_options} disabled={disableSubmitBtn}
                             onchange={handlePartNumberChange} variant="label-stacked"></lightning-combobox>
+                            -->
+                              <c-enrollment-lookup class="slds-col slds-size_6-of-12 slds-p-bottom_x-small slds-p-right_large" icon-name="standard:user"
+                            s-object-api-name="PriceBookEntry"
+                            label="Part Number"
+                            data-index={index}
+                            onrecordupdate={handlePartNumberChange}
+                            isrequired ="true"                            
+                            placeholder="type here..."></c-enrollment-lookup>
+                           
                     </div>
-                    <div class="slds-col slds-size_1-of-4">
+                    <div class="slds-col slds-size_1-of-4"> <br />
                         <lightning-input data-name="description" label="Description" variant="label-stacked"
                             value={pObjItem.Part_Description__c} disabled="true"> </lightning-input>
                     </div>
-                    <div class="slds-col slds-size_1-of-4">
-                        <lightning-input data-name="msrp" label="MSRP" variant="label-stacked" value={pObjItem.Part_MSRP__c}
-                            disabled="true"> </lightning-input>
+                    <div class="slds-col slds-size_1-of-4"> <br />
+                        <lightning-input data-name="msrp" label="MSRP" variant="label-stacked"
+                            value={pObjItem.Part_MSRP__c} disabled="true"> </lightning-input>
                     </div>
-                    <div class="slds-col slds-size_1-of-4">
-                        <lightning-input data-name="Customer Discount" label="Customer Discount" variant="label-stacked"
-                            value={pObjItem.Part_Customer_Discount__c} disabled="true"> </lightning-input>
+                    <div class="slds-col slds-size_1-of-4"> <br />
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_3-of-4">
+                                <lightning-input data-name="Customer Discount" label="Customer Discount"
+                                    variant="label-stacked" value={pObjItem.Part_Customer_Discount__c} disabled="true">
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                <br />
+                                <lightning-button-icon icon-name="utility:delete" disabled={disableSubmitBtn}
+                                    alternative-text="Delete" class="slds-m-left_xx-small" title="Delete"
+                                     data-id={pObjItem.id}
+                                    onclick={deleteItem}></lightning-button-icon>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </template>
 
             <br />
             <template if:true={partAccessoryObjListNotEmpty}>
-                <div class="slds-grid slds-gutters">
+                <div class="slds-grid slds-gutters">                   
                     <div class="slds-col slds-size_1-of-4">
                         <lightning-button variant="brand" label="+Add New" title="+Add New"
-                            onclick={addPartsAccessorryBtnClick} disabled={disableSubmitBtn} class="slds-m-left_x-small">
+                            onclick={addPartsAccessorryBtnClick} disabled={disableSubmitBtn}
+                            class="slds-m-left_x-small">
                         </lightning-button>
                     </div>
                     <div class="slds-col slds-size_1-of-4">
@@ -224,8 +252,7 @@
                     <div class="slds-col slds-size_2-of-4">
                         <lightning-input name="total" variant="label-inline" label="Total Customer Discount"
                             placeholder="$0" value={totalCustomerDiscount} disabled="true"></lightning-input>
-                    </div>
-
+                    </div>                  
                 </div>
                 <br />
                 <div class="slds-grid slds-gutters">
@@ -234,8 +261,8 @@
                     </div>
                     <div class="slds-col slds-size_2-of-4">
                         <center>
-                            <lightning-button variant="brand" label="Submit" title="Submit" onclick={submitDataBtnClick} disabled={disableSubmitBtn}
-                                class="slds-m-left_x-small">
+                            <lightning-button variant="brand" label="Submit" title="Submit" onclick={submitDataBtnClick}
+                                disabled={disableSubmitBtn} class="slds-m-left_x-small">
                             </lightning-button>
                         </center>
                     </div>
@@ -306,7 +333,7 @@
                 </div>
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
-              
+
         </template>
         <lightning-spinner if:true={isLoading}></lightning-spinner>
     </div>
